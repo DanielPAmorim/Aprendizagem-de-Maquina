@@ -1,0 +1,42 @@
+!/usr/share/locales/install-language-pack pt_BR
+!dpkg-reconfigure locales
+
+import pandas as pd
+import datetime
+import csv
+
+# Criar dados fictícios
+data = [
+    ['João', '01/01/1990', '2023-10-26', '10:00'],
+    ['Maria', '05/15/1985', '2023-10-27', '14:30'],
+    ['Pedro', '10/20/1998', '2023-10-28', '16:15'],
+    ['Ana', '07/08/2000', '2023-10-29', '09:45'],
+    ['Lucas', '03/03/1995', '2023-10-30', '11:20']
+]
+
+# Criar o arquivo CSV
+with open('dados.csv', 'w', newline='', encoding='utf-8') as file:
+  writer = csv.writer(file)
+  writer.writerow(['Nome', 'Data de Nascimento', 'Dia do Cadastro', 'Hora do Cadastro'])
+  writer.writerows(data)
+
+# Ler o arquivo CSV
+df = pd.read_csv('dados.csv')
+
+# Solicitar o registro desejado ao usuário
+n = int(input("Informe o número do registro que deseja visualizar (1-5): "))
+
+# Formatar a data para o padrão brasileiro
+def formatar_data(data_str):
+  try:
+    data = datetime.datetime.strptime(data_str, '%Y-%m-%d').strftime('%d/%m/%Y')
+    return data
+  except ValueError:
+    return data_str  # Se não for possível formatar, retorna a string original
+
+# Imprimir o registro solicitado
+if 1 <= n <= 5:
+  registro = df.iloc[n - 1]
+  print(f"{registro['Nome']}, {registro['Data de Nascimento']}, {formatar_data(registro['Dia do Cadastro'])}, {registro['Hora do Cadastro']}")
+else:
+  print("Número de registro inválido.")
